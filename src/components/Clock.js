@@ -1,13 +1,34 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { tick} from '../actions/index';
 
 class Clock extends Component {
+
+  componentDidMount() {
+    setInterval( ()=> {this.props.tick()}, 1000 );
+  }
+
   render() {
+    const { time, date } = this.props;
+    const colorStyle = {color: this.props.color}
     return (
       <div className="clock">
-          This is where the clock will go!
+        <h1 style={ colorStyle }>{time}</h1>
+        <hr/>
+        {date}
       </div>
     )
   }
 }
 
-export default Clock
+function mapStateToProps(state) {
+  return {
+    time: state.clock.currentTime,
+    date: state.clock.date,
+    color: state.color.color
+  }
+}
+
+export default connect(mapStateToProps, {
+  tick,
+})(Clock);
